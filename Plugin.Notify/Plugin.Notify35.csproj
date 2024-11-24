@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--This to lines are added to separate build process between .NET & .NET Standard-->
+    <BaseOutputPath>$(MSBuildProjectDirectory)/obj/net20/$(MSBuildProjectName)/bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/obj/net20/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
+    <Version Condition="'$(Version)' == ''">1.1.2.0</Version>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7AE2E097-4DAD-442F-A807-DE092B35918C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Plugin.Notify</RootNamespace>
+    <AssemblyName>Plugin.Notify</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SAL.Flatbed, Version=1.2.9.2, Culture=neutral, PublicKeyToken=a8ac5fc45c3adb8d, processorArchitecture=MSIL">
+      <HintPath>..\packages\SAL.Flatbed.1.2.9.2\lib\net20\SAL.Flatbed.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SAL.Windows, Version=1.2.9.2, Culture=neutral, PublicKeyToken=a8ac5fc45c3adb8d, processorArchitecture=MSIL">
+      <HintPath>..\packages\SAL.Windows.1.2.9.2\lib\net20\SAL.Windows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlertDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AlertDialog.Designer.cs">
+      <DependentUpon>AlertDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AlertItemLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="AlertItemLabel.Designer.cs">
+      <DependentUpon>AlertItemLabel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PluginWindows.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AlertDialog.resx">
+      <DependentUpon>AlertDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AlertItemLabel.resx">
+      <DependentUpon>AlertItemLabel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\Arrow.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <AssemblyAttributes Include="AssemblyVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyFileVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+      <AssemblyAttributes Include="AssemblyInformationalVersion">
+        <_Parameter1>$(Version)</_Parameter1>
+      </AssemblyAttributes>
+    </ItemGroup>
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <WriteCodeFragment Language="C#" OutputFile="$(IntermediateOutputPath)Version.cs" AssemblyAttributes="@(AssemblyAttributes)" />
+    <ItemGroup>
+      <Compile Include="$(IntermediateOutputPath)Version.cs" />
+    </ItemGroup>
+  </Target>
+</Project>

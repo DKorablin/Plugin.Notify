@@ -1,2 +1,2 @@
-# TEMPLATE plugin
-This is a template plugin description
+# Notify plugin
+Plugin to create a nifty notify window
