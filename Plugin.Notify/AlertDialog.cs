@@ -10,20 +10,23 @@ namespace Plugin.Notify
 	{
 		private const Int32 CS_DROPSHADOW = 0x00020000;
 
-		internal static List<AlertDialog> _shownDialogs = new List<AlertDialog>();
+		internal static readonly List<AlertDialog> _shownDialogs = new List<AlertDialog>();
+
 		private readonly PluginWindows _plugin;
+
 		/// <summary>Y coordinate</summary>
 		private Int32 _startPosition = 0;
 		private Rectangle _workingArea;
 		private Boolean _hide = false;
 
-		/// <summary>Отображение заголовком цвета</summary>
+		/// <summary>Displaying a color header</summary>
 		public Color TitleBackColor
 		{
 			get => pnlTitle.BackColor;
 			set => pnlTitle.BackColor = value;
 		}
-		/// <summary>Заголовок формы</summary>
+
+		/// <summary>Form Title</summary>
 		public String TitleText
 		{
 			get => lblTitle.Text;
@@ -34,14 +37,15 @@ namespace Plugin.Notify
 		{
 			get
 			{
-				CreateParams prms = base.CreateParams;
-				prms.ClassStyle |= CS_DROPSHADOW;
-				return prms;
+				CreateParams items = base.CreateParams;
+				items.ClassStyle |= CS_DROPSHADOW;
+				return items;
 			}
 		}
+
 		public AlertDialog(PluginWindows plugin)
 		{
-			this._plugin = plugin;
+			this._plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
 
 			this.InitializeComponent();
 		}
@@ -51,6 +55,7 @@ namespace Plugin.Notify
 			this._workingArea = SystemInformation.WorkingArea;
 			this.SetDialogLocation(true);
 		}
+
 		private void opacityTimer_Tick(Object sender, EventArgs e)
 		{
 			if(this._hide)
@@ -60,7 +65,6 @@ namespace Plugin.Notify
 				else
 				{
 					opacityTimer.Stop();
-					//base.Hide();
 					this.Dispose();
 				}
 			} else
@@ -88,6 +92,7 @@ namespace Plugin.Notify
 					moveTimer.Stop();
 			}
 		}
+
 		private void bnClose_Click(Object sender, EventArgs e)
 			=> this.Hide();
 
@@ -102,6 +107,7 @@ namespace Plugin.Notify
 			Cursor = Cursors.Default;
 			bnClose.ImageIndex = 0;
 		}
+
 		protected override Boolean ProcessDialogKey(Keys keyData)
 		{
 			switch(keyData)
@@ -113,6 +119,7 @@ namespace Plugin.Notify
 				return base.ProcessDialogKey(keyData);
 			}
 		}
+
 		public void ShowInfo(Color titleBackColor, String titleText, params String[] items)
 		{
 			this.TitleBackColor = titleBackColor;
@@ -140,6 +147,7 @@ namespace Plugin.Notify
 
 			this.Show();
 		}
+
 		public new void Show()
 		{
 			this.ResetTimers(false);
@@ -172,11 +180,12 @@ namespace Plugin.Notify
 
 			Int32 y = this._workingArea.Height - dlgHeight;
 			this._startPosition = y;
-			if(isShown)//Если окно уже отображено, то стартовая позиция должна быть снизу окна, а не в верхнем правом углу
+			if(isShown)//If the window is already displayed, the starting position should be at the bottom of the window, not in the upper right corner.
 				this._startPosition -= base.Size.Height;
 
 			base.Location = new Point(this._workingArea.Width - base.Size.Width - 15, y);
 		}
+
 		public new void Hide()
 		{
 			SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
@@ -184,6 +193,7 @@ namespace Plugin.Notify
 			opacityTimer.Start();
 			moveTimer.Start();
 		}
+
 		/*/// <summary>
 		/// Constants in Windows API
 		/// 0x84 = WM_NCHITTEST - Mouse Capture Test
@@ -193,7 +203,7 @@ namespace Plugin.Notify
 		/// This function intercepts all the commands sent to the application. 
 		/// It checks to see of the message is a mouse click in the application. 
 		/// It passes the action to the base action by default. It reassigns 
-		/// the action to the title bar if it occured in the client area
+		/// the action to the title bar if it occurred in the client area
 		/// to allow the drag and move behavior.
 		/// </summary>
 		protected override void WndProc(ref Message m)
@@ -230,7 +240,7 @@ namespace Plugin.Notify
 		{
 			if(disposing && components != null)
 			{
-				if(AlertDialog._shownDialogs.Remove(this))//Удаляю диалог из массива и двигаю все остальные окна на место текущего окна
+				if(AlertDialog._shownDialogs.Remove(this))//I remove the dialog from the array and move all other windows to the current window's location.
 					foreach(AlertDialog dlg in AlertDialog._shownDialogs)
 						dlg.SystemEvents_DisplaySettingsChanged(null, EventArgs.Empty);
 				components.Dispose();
