@@ -12,8 +12,6 @@ namespace Plugin.Notify
 
 		internal static readonly List<AlertDialog> _shownDialogs = new List<AlertDialog>();
 
-		private readonly PluginWindows _plugin;
-
 		/// <summary>Y coordinate</summary>
 		private Int32 _startPosition = 0;
 		private Rectangle _workingArea;
@@ -43,12 +41,8 @@ namespace Plugin.Notify
 			}
 		}
 
-		public AlertDialog(PluginWindows plugin)
-		{
-			this._plugin = plugin ?? throw new ArgumentNullException(nameof(plugin));
-
-			this.InitializeComponent();
-		}
+		public AlertDialog()
+			=> this.InitializeComponent();
 
 		private void SystemEvents_DisplaySettingsChanged(Object sender, EventArgs e)
 		{

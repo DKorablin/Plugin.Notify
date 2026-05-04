@@ -5,4 +5,3 @@ using System.Runtime.InteropServices;
 [assembly: System.CLSCompliant(true)]
 
 [assembly: AssemblyDescription("Creates a nifty notification window")]
-[assembly: AssemblyCopyright("Copyright © Danila Korablin 2013-2025")]
